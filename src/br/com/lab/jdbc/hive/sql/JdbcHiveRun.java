@@ -1,10 +1,14 @@
 package br.com.lab.jdbc.hive.sql;
 
+import br.com.lab.jdbc.lib.Utilities;
+import br.com.lab.jdbc.sql.TypeStatement;
+
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.DriverManager;
+import java.util.List;
 import java.util.Properties;
 
 public class JdbcHiveRun {
@@ -21,6 +25,14 @@ public class JdbcHiveRun {
             e.printStackTrace();
             System.exit(1);
         }
+
+        //Lista com as data atual e anterior
+        List<String> dates = Utilities.datePartition();
+
+        String dtCurrent = dates.get(0);
+        String dtPass = dates.get(1);
+
+        //Configuração das propeties da sessão
         Properties conProperties = new Properties();
         conProperties.put("hive.support.concurrency", "true");
         conProperties.put("hive.exec.dynamic.partition.mode", "nonstrict");
@@ -29,19 +41,41 @@ public class JdbcHiveRun {
         conProperties.put("hive.compactor.worker.threads", "1");
         conProperties.put("user", user);
         conProperties.put("password", password);
+
+        //Inicializando sessão
         con = DriverManager.getConnection(caminhoHive, conProperties);
         stmt = con.createStatement();
+
+        //Set de variaveis de data
+        stmt.executeUpdate("set dtCurrent=" +"'"+ dtCurrent + "'");
+        stmt.executeUpdate("set dtPass=" +"'"+ dtPass + "'");
     }
 
-    public  void executeQuery(String query) {
+    public  void execute(TypeStatement typeQuery) {
 
-        ResultSet set = null;
+        ResultSet res = null;
 
         try {
-            System.out.println(query);
-            ResultSet res = stmt.executeQuery(query);
-            while (res.next()) {
-                System.out.println(res.getString(1));
+            System.out.println(typeQuery.statement);
+            if(typeQuery.update) {
+                System.out.print("Linhas processadas: ");
+                System.out.println(stmt.executeUpdate(typeQuery.statement));
+            }
+            else if(typeQuery.select) {
+                res = stmt.executeQuery(typeQuery.statement);
+                System.out.println(res.getMetaData().getColumnCount());
+                while (res.next()) {
+                    for(int i=1; i < res.getMetaData().getColumnCount(); i++){
+                        System.out.print(res.getString(i) + " ");
+                    }
+                    System.out.println(" ");
+                }
+            }
+            else{
+                res = stmt.executeQuery(typeQuery.statement);
+                while (res.next()) {
+                    System.out.println(res.getString(1));
+                }
             }
         }
         catch (SQLException e){

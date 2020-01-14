@@ -9,10 +9,10 @@ public class FileIO {
 
     private BufferedReader buffer;
 
-    public String lerArquivo(String arquivo) throws IOException {
+    public String readFile(String arquivo) throws IOException {
 
-        String linha;
-        StringBuilder criaString = new StringBuilder();
+        String line;
+        StringBuilder makeString = new StringBuilder();
 
         try {
             buffer = new BufferedReader(new FileReader(arquivo));
@@ -22,13 +22,13 @@ public class FileIO {
             System.exit(1);
         }
 
-        while((linha = buffer.readLine()) != null) {
-            criaString.append(linha);
+        while((line = buffer.readLine()) != null) {
+            makeString.append(line);
         }
-        return criaString.toString();
+        return makeString.toString();
     }
 
-    public String[] criaArrayQuerys(String stringcriada){
+    public String[] makeArrayQuerys(String stringcriada){
         String[] querys;
         querys = stringcriada.split(";");
         return querys;
