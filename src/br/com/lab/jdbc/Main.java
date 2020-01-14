@@ -2,6 +2,8 @@ package br.com.lab.jdbc;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.List;
+
 import br.com.lab.jdbc.io.FileIO;
 import br.com.lab.jdbc.hive.sql.JdbcHiveRun;
 import br.com.lab.jdbc.sql.TypeStatement;
@@ -43,7 +45,7 @@ public class Main {
         //Lendo o arquivo
         FileIO qrio_hive = new FileIO();
         String contentFile = qrio_hive.readFile(file);
-        String[] querys = qrio_hive.makeArrayQuerys(contentFile);
+        List<String> querys = qrio_hive.makeArrayQuerys(contentFile);
 
         //Processando as querys
         for (String query: querys){
