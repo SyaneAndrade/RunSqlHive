@@ -49,6 +49,8 @@ public class JdbcHiveRun {
         //Set de variaveis de data
         stmt.executeUpdate("set dtCurrent=" +"'"+ dtCurrent + "'");
         stmt.executeUpdate("set dtPass=" +"'"+ dtPass + "'");
+        stmt.executeUpdate("set hive.exec.dynamic.partition=true");
+        stmt.executeUpdate("set hive.exec.dynamic.partition.mode=nonstrict");
     }
 
     public  void execute(TypeStatement typeQuery) {
@@ -57,11 +59,13 @@ public class JdbcHiveRun {
 
         try {
             System.out.println(typeQuery.statement);
+            //se for um update irá rodar aqui
             if(typeQuery.update) {
                 System.out.print("Linhas processadas: ");
                 System.out.println(stmt.executeUpdate(typeQuery.statement));
             }
             else if(typeQuery.select) {
+                //se for do tipo select ira rodar aqui
                 res = stmt.executeQuery(typeQuery.statement);
                 System.out.println(res.getMetaData().getColumnCount());
                 while (res.next()) {
@@ -72,6 +76,7 @@ public class JdbcHiveRun {
                 }
             }
             else{
+                //se for qlqr outra coisa ira rodar aqui
                 res = stmt.executeQuery(typeQuery.statement);
                 while (res.next()) {
                     System.out.println(res.getString(1));
