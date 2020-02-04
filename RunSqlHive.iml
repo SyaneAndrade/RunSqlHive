@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="hive-jdbc-uber-2.6.5.0-292" level="project" />
+    <orderEntry type="library" name="com.opencsv:opencsv:5.1" level="project" />
   </component>
 </module>

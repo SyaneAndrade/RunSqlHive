@@ -1,10 +1,15 @@
 package br.com.lab.jdbc.lib;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
+import com.opencsv.CSVWriter;
 
 public abstract class Utilities {
 
@@ -21,4 +26,13 @@ public abstract class Utilities {
         return datePartition;
 
     }
+
+    public static int writeResultCSV(ResultSet resultDados, String query) throws IOException, SQLException {
+        String arquivoName = query.toLowerCase().split("from")[1];
+        arquivoName = arquivoName.split(" ")[1] + ".csv";
+        CSVWriter csvWriter = new CSVWriter( new FileWriter(arquivoName),
+                '^', '"', '"', "\n");
+        return csvWriter.writeAll(resultDados, true);
+    }
+
 }

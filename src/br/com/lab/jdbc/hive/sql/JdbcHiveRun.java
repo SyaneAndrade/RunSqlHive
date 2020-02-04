@@ -3,6 +3,7 @@ package br.com.lab.jdbc.hive.sql;
 import br.com.lab.jdbc.lib.Utilities;
 import br.com.lab.jdbc.sql.TypeStatement;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -67,6 +68,7 @@ public class JdbcHiveRun {
             else if(typeQuery.select) {
                 //se for do tipo select ira rodar aqui
                 res = stmt.executeQuery(typeQuery.statement);
+                Utilities.writeResultCSV(res, typeQuery.statement);
                 System.out.println(res.getMetaData().getColumnCount());
                 while (res.next()) {
                     for(int i=1; i < res.getMetaData().getColumnCount(); i++){
@@ -83,7 +85,7 @@ public class JdbcHiveRun {
                 }
             }
         }
-        catch (SQLException e){
+        catch (SQLException | IOException e){
             e.printStackTrace();
         }
     }
