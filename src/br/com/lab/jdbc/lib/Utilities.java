@@ -29,7 +29,10 @@ public abstract class Utilities {
 
     public static int writeResultCSV(ResultSet resultDados, String query) throws IOException, SQLException {
         String arquivoName = query.toLowerCase().split("from")[1];
-        arquivoName = arquivoName.split(" ")[1] + ".csv";
+        String now = datePartition().get(0);
+        File path = new File(now);
+        path.mkdir();
+        arquivoName = now + "/" + arquivoName.split(" ")[1] + ".csv";
         CSVWriter csvWriter = new CSVWriter( new FileWriter(arquivoName),
                 '^', '"', '"', "\n");
         return csvWriter.writeAll(resultDados, true);
